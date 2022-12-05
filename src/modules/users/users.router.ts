@@ -1,30 +1,36 @@
 import { Router, Request, Response } from 'express';
 
-import {getUsers} from './actions/get-users.action';
-import {getUser} from './actions/get-user.action';
-import { createUser } from './actions/create-user.action';
-import { CreateUserPayloadDto } from './types/create-user-payload.dto';
+import { find, findOne, update, remove, create } from './users.repository';
+
+import { CreateUserDto } from './dto/create-user.dto';
 
 const router: Router = Router();
 
 router.get('/', (req: Request, res: Response) => {
-  const users = getUsers();
+  const users = find();
 
   res.json(users);
 });
 
 router.post('/', async (req: Request, res: Response) => {
-  const payload: CreateUserPayloadDto = req.body;
-  const user = await createUser(payload);
+  const payload: CreateUserDto = req.body;
+  const user = await create(payload);
 
   res.json(user);
 });
 
 router.get('/:id', (req: Request, res: Response) => {
   const { id } = req.params;
-  const user = getUser(+id)
+  const user = findOne(id);
 
   res.json(user);
+});
+
+router.delete('/:id', (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = remove(id);
+
+  res.json({ id: result });
 });
 
 export default router;

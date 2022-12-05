@@ -2,16 +2,14 @@ import express, { Application } from 'express';
 import process from 'node:process';
 
 import routes from './routes';
+import initialize from './initialize';
 
-const port: string = process.env.SERVER_PORT;
+const port: number = +(process.env.SERVER_PORT ?? 8080);
 
 const app: Application = express();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
+initialize(app);
 routes(app);
-
 
 // start the express server
 app.listen(port, () => {
