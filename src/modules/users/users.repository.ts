@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { User } from "./types/user.model";
+import { User } from "./domain/user.model";
 import { CreateUserDto } from "./dto/create-user.dto";
 
 const users: User[] = [];
@@ -43,7 +43,6 @@ export function update(id: string): User | null {
 export function remove(id: string): string | null {
 
   const index = users.findIndex( user => user.id === id);
-  console.log(index);
   if (index !== -1) {
     users[index] = {
       ...users[index],

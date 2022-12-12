@@ -1,36 +1,82 @@
 import { Router, Request, Response } from 'express';
 
-import { find, findOne, update, remove, create } from './users.repository';
-
 import { CreateUserDto } from './dto/create-user.dto';
+import { UsersService } from "./users.service";
+import { AppResponseInterface } from "../../shared/domain/app-response.interface";
+import { RemoveUserResponseDto } from "./dto/remove-user-response.dto";
+import { User } from "./domain/user.model";
+import { UpdateUserDto } from "./dto/update-user.dto";
+import { notFoundHttpException } from "../../shared/http-exceptions";
 
 const router: Router = Router();
+const userService = new UsersService();
 
 router.get('/', (req: Request, res: Response) => {
-  const users = find();
+  const { limit = 10, search = '' } = req.query;
+  const users = userService.getAutoSuggestUsers(`${search}`, Number(limit) );
 
-  res.json(users);
+  const response: AppResponseInterface<User[]> = {
+    data: users
+  };
+
+  res.json(response);
 });
 
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', (req: Request, res: Response) => {
   const payload: CreateUserDto = req.body;
-  const user = await create(payload);
+  const user = userService.create(payload);
 
-  res.json(user);
+  const response: AppResponseInterface<User | null> = {
+    data: user
+  };
+
+  res.json(response);
+});
+
+router.put('/:id', (req: Request, res: Response) => {
+  const { id } = req.params;
+  const payload: UpdateUserDto = req.body;
+  const user = userService.update(id, payload);
+
+  if (!user) {
+    notFoundHttpException(res);
+  }
+
+  const response: AppResponseInterface<User | null> = {
+    data: user
+  };
+
+  res.json(response);
 });
 
 router.get('/:id', (req: Request, res: Response) => {
   const { id } = req.params;
-  const user = findOne(id);
+  const user = userService.findOne(id);
 
-  res.json(user);
+  if (!user) {
+    notFoundHttpException(res);
+  }
+
+  const response: AppResponseInterface<User | null> = {
+    data: user
+  };
+
+  res.json(response);
 });
 
 router.delete('/:id', (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = remove(id);
+  const result = userService.remove(id);
 
-  res.json({ id: result });
+  if (!result) {
+    notFoundHttpException(res);
+  }
+
+  const response: AppResponseInterface<RemoveUserResponseDto> = {
+    data: result
+  };
+
+  res.json(response);
 });
 
 export default router;

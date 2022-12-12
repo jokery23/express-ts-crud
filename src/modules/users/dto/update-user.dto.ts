@@ -1,3 +1,3 @@
 import { User } from "../domain/user.model";
 
-export type GetUsersResponseDto = User;
+export type UpdateUserDto = Partial<User>;

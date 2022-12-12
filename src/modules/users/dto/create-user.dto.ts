@@ -1,3 +1,3 @@
-import { User } from "../types/user.model";
+import { User } from "../domain/user.model";
 
 export type CreateUserDto = Pick<User, 'login' | 'password' | 'age'>
