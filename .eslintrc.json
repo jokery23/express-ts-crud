@@ -1,7 +1,6 @@
 {
-  "parser": "babel-eslint",
-  "plugins": [
-  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint/eslint-plugin", "eslint-plugin-typescript-enum"],
   "env": {
     "browser": true,
     "node": true,
@@ -160,10 +159,12 @@
     "no-delete-var": 2,
     "no-label-var": 2,
     "no-shadow-restricted-names": 2,
-    "no-shadow": 2,
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": ["error"],
     "no-undef-init": 2,
     "no-undef": 2,
-    "no-unused-vars": 2,
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": ["error"],
     // Node.js
     "callback-return": 2,
     "no-mixed-requires": 2,
@@ -218,16 +219,7 @@
       }
     ],
     "linebreak-style": 0,
-    "max-len": [
-      2,
-      200,
-      4,
-      {
-        "ignoreUrls": true,
-        "ignoreComments": false,
-        "ignorePattern": "^\\s*(const|let|var)\\s+\\w+\\s+\\=\\s+\\/.*\\/(|i|g|m|ig|im|gm|igm);?$"
-      }
-    ],
+    "max-len": [ "error", { "code": 200, "tabWidth": 4 }],
     "max-nested-callbacks": [
       2,
       4

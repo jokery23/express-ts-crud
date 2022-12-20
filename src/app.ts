@@ -13,5 +13,5 @@ routes(app);
 
 // start the express server
 app.listen(port, () => {
-  console.log(`server started at http://localhost:${port}`);
+    console.log(`server started at http://localhost:${port}`);
 });
