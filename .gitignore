@@ -1,4 +1,6 @@
-# test
+# husky
+.husky
+
 src/configs/environments/.env
 # Compiled output
 /dist
