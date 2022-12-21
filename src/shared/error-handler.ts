@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { ValidationError } from "joi";
+import { ValidationError } from 'joi';
 
 import { AppResponseInterface } from './domain/interfaces/app-response.interface';
 import { HttpStatusCode } from './domain/enums/http-status-code.enum';
