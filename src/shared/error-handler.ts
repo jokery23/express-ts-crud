@@ -1,19 +1,49 @@
 import { NextFunction, Request, Response } from 'express';
+// import {Valid} from 'express-joi-validation';
+
 import { AppResponseInterface } from './domain/interfaces/app-response.interface';
 import { HttpStatusCode } from './domain/enums/http-status-code.enum';
+import { ValidationError } from 'joi';
+import { AppErrorInterface } from './domain/interfaces/app-error.interface';
 
-export const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction): void => {
+export const errorHandler = (err: Error | ValidationError | any, req: Request, res: Response, next: NextFunction): void => {
     try {
-        const error: string = err?.message;
+        let error: string;
+        const errors: AppErrorInterface[] = [];
+        let statusCode = res.statusCode || HttpStatusCode.InternalServerError;
+
+        if (err instanceof Error) {
+            error = err?.message;
+            errors.push({ message: error || 'Something went wrong!' });
+        } else {
+            const validationError = err.error as ValidationError;
+            errors.push(...getParsedValidationErrors(validationError));
+            if (errors.length) {
+                statusCode = HttpStatusCode.BadRequest;
+            }
+        }
 
         const response: AppResponseInterface<null> = {
             data: null,
-            errors: [{ message: error || 'Something went wrong!' }]
+            errors
         };
 
-        res.status(res.statusCode || HttpStatusCode.InternalServerError).json(response);
+        res.status(statusCode).json(response);
     } catch (e) {
         next(e);
         return;
     }
 };
+
+function getParsedValidationErrors(error: ValidationError): AppErrorInterface[] {
+    const { details } = error;
+
+    const errors: AppErrorInterface[] = details.map(({ message, path }) => {
+        return {
+            message,
+            field: `${path[0]}`
+        };
+    });
+
+    return errors;
+}

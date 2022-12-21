@@ -7,35 +7,35 @@ const generatePassword = () => uuidv4().split('-').join('').substring(0, 12);
 export const predefinedUsers: User[] = [
     {
         id: uuidv4(),
-        login: 'john_doe',
+        login: 'john_doe@dev.dev',
         isDeleted: false,
         age: generateAge(),
         password: generatePassword()
     },
     {
         id: uuidv4(),
-        login: 'peter_schmeichel',
+        login: 'peter_schmeichel@dev.dev',
         isDeleted: false,
         age: generateAge(),
         password: generatePassword()
     },
     {
         id: uuidv4(),
-        login: 'luke_skywalker',
+        login: 'luke_skywalker@dev.dev',
         isDeleted: false,
         age: generateAge(),
         password: generatePassword()
     },
     {
         id: uuidv4(),
-        login: 'peter_parker',
+        login: 'peter_parker@dev.dev',
         isDeleted: false,
         age: generateAge(),
         password: generatePassword()
     },
     {
         id: uuidv4(),
-        login: 'luke_show',
+        login: 'luke_show@dev.dev',
         isDeleted: false,
         age: generateAge(),
         password: generatePassword()

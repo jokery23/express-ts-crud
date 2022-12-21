@@ -6,6 +6,8 @@ import { User } from './domain/user.model';
 import { CreateUserDto } from './domain/dto/create-user.dto';
 import { RemoveUserResponseDto } from './domain/dto/remove-user-response.dto';
 import { UpdateUserDto } from './domain/dto/update-user.dto';
+import { CreateUserResponseDto } from './domain/dto/create-user-response.dto';
+import { UpdateUserResponseDto } from './domain/dto/update-user-response.dto';
 
 export class UsersService {
     private users: User[] = [];
@@ -28,7 +30,7 @@ export class UsersService {
         return this.users.find((user) => user.id === id) || null;
     }
 
-    create(createUser: CreateUserDto): User | null {
+    create(createUser: CreateUserDto): CreateUserResponseDto {
         createUser.age = +createUser.age;
 
         const user: User = {
@@ -42,7 +44,7 @@ export class UsersService {
         return user;
     }
 
-    update(id: string, payload: UpdateUserDto): User | null {
+    update(id: string, payload: UpdateUserDto): UpdateUserResponseDto {
         const index = this.users.findIndex((user) => user.id === id);
         if (index !== -1) {
             this.users[index] = {

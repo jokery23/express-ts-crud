@@ -1,4 +1,6 @@
 import { Router, Request, Response } from 'express';
+import Joi from 'joi';
+import { createValidator, ExpressJoiContainerConfig } from 'express-joi-validation';
 
 import { CreateUserDto } from './domain/dto/create-user.dto';
 import { UsersService } from './users.service';
@@ -7,9 +9,24 @@ import { RemoveUserResponseDto } from './domain/dto/remove-user-response.dto';
 import { User } from './domain/user.model';
 import { UpdateUserDto } from './domain/dto/update-user.dto';
 import { notFoundHttpException } from '../../shared/http-exceptions';
+import { HttpStatusCode } from '../../shared/domain/enums/http-status-code.enum';
 
 const router: Router = Router();
 const userService = new UsersService();
+
+const validator = createValidator();
+const validateConfig: ExpressJoiContainerConfig = {
+    passError: true,
+    statusCode: HttpStatusCode.BadRequest
+};
+
+const userSchema = Joi.object<User>({
+    id: Joi.string().required(),
+    login: Joi.string().email().required(),
+    password: Joi.string().alphanum().required(),
+    age: Joi.number().integer().min(4).max(120).required(),
+    isDeleted: Joi.boolean().required()
+});
 
 router.get('/', (req: Request, res: Response) => {
     const { limit = 10, search = '' } = req.query;
@@ -22,7 +39,7 @@ router.get('/', (req: Request, res: Response) => {
     res.json(response);
 });
 
-router.post('/', (req: Request, res: Response) => {
+router.post('/', validator.body(userSchema, validateConfig), (req: Request, res: Response) => {
     const payload: CreateUserDto = req.body;
     const user = userService.create(payload);
 
@@ -33,7 +50,7 @@ router.post('/', (req: Request, res: Response) => {
     res.json(response);
 });
 
-router.put('/:id', (req: Request, res: Response) => {
+router.put('/:id', validator.body(userSchema, validateConfig), (req: Request, res: Response) => {
     const { id } = req.params;
     const payload: UpdateUserDto = req.body;
     const user = userService.update(id, payload);
