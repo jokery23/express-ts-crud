@@ -1,9 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-// import {Valid} from 'express-joi-validation';
+import { ValidationError } from "joi";
 
 import { AppResponseInterface } from './domain/interfaces/app-response.interface';
 import { HttpStatusCode } from './domain/enums/http-status-code.enum';
-import { ValidationError } from 'joi';
 import { AppErrorInterface } from './domain/interfaces/app-error.interface';
 
 export const errorHandler = (err: Error | ValidationError | any, req: Request, res: Response, next: NextFunction): void => {
