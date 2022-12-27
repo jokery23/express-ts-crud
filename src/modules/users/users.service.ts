@@ -27,7 +27,7 @@ export class UsersService {
     }
 
     findOne(id: string): User | null {
-        return this.users.find((user) => user.id === id) || null;
+        return this.findOneByField('id', id);
     }
 
     create(createUser: CreateUserDto): CreateUserResponseDto {
@@ -72,6 +72,10 @@ export class UsersService {
         return id;
     }
 
+    findOneByField(field: keyof User, value: any): User | null {
+        return this.users.find((user) => user[field] === value) || null;
+    }
+
     private sortByLogin(userA: User, userB: User): number {
         const nameA = userA.login.toLowerCase();
         const nameB = userB.login.toLowerCase();
@@ -87,3 +91,5 @@ export class UsersService {
         return 0;
     }
 }
+
+export const userService = new UsersService();
