@@ -4,7 +4,6 @@ import { User } from './user.model';
 import { userService } from '../users.service';
 
 export const createPayloadSchema = Joi.object<User>({
-    id: Joi.string().required(),
     login: Joi.string()
         .email()
         .required()

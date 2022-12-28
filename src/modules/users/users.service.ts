@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
+import * as _ from 'lodash';
 
-import { predefinedUsers } from '../../seeds/users.seeds';
+import { getPredefinedUsers } from '../../seeds/users.seeds';
 
 import { User } from './domain/user.model';
 import { CreateUserDto } from './domain/dto/create-user.dto';
@@ -13,17 +14,17 @@ export class UsersService {
     private users: User[] = [];
 
     constructor() {
-        this.users.push(...predefinedUsers);
+        this.users.push(...getPredefinedUsers());
     }
 
     getAutoSuggestUsers(loginSubstring = '', limit = 10): User[] {
-        let users: User[] = this.users.sort(this.sortByLogin);
+        let users: User[] = _.sortBy<User>(this.users, 'login');
 
         if (loginSubstring) {
-            users = users.filter((user) => user.login.toLowerCase().includes(loginSubstring));
+            users = _.filter<User>(users, (user) => user.login.toLowerCase().includes(loginSubstring));
         }
 
-        return users.slice(0, limit);
+        return _.take(users, limit);
     }
 
     findOne(id: string): User | null {
@@ -45,7 +46,7 @@ export class UsersService {
     }
 
     update(id: string, payload: UpdateUserDto): UpdateUserResponseDto {
-        const index = this.users.findIndex((user) => user.id === id);
+        const index = _.findIndex<User>(this.users, (user) => user.id === id);
         if (index !== -1) {
             this.users[index] = {
                 ...this.users[index],
@@ -59,36 +60,13 @@ export class UsersService {
     }
 
     remove(id: string): RemoveUserResponseDto {
-        const index = this.users.findIndex((user) => user.id === id);
-        if (index !== -1) {
-            this.users[index] = {
-                ...this.users[index],
-                isDeleted: true
-            };
-        } else {
-            return null;
-        }
+        const removed = _.remove<User>(this.users, (user) => user.id === id);
 
-        return id;
+        return removed.length > 0 ? id : null;
     }
 
     findOneByField(field: keyof User, value: any): User | null {
-        return this.users.find((user) => user[field] === value) || null;
-    }
-
-    private sortByLogin(userA: User, userB: User): number {
-        const nameA = userA.login.toLowerCase();
-        const nameB = userB.login.toLowerCase();
-
-        if (nameA < nameB) {
-            return -1;
-        }
-
-        if (nameA > nameB) {
-            return 1;
-        }
-
-        return 0;
+        return _.find<User>(this.users, (user) => user[field] === value) || null;
     }
 }
 

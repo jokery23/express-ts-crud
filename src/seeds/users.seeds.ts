@@ -4,7 +4,7 @@ import { User } from '../modules/users/domain/user.model';
 const generateAge = () => Math.floor(Math.random() * (40 - 18) + 18);
 const generatePassword = () => uuidv4().split('-').join('').substring(0, 12);
 
-export const predefinedUsers: User[] = [
+const predefinedUsers: User[] = [
     {
         id: uuidv4(),
         login: 'john_doe@dev.dev',
@@ -28,7 +28,7 @@ export const predefinedUsers: User[] = [
     },
     {
         id: uuidv4(),
-        login: 'peter_parker@dev.dev',
+        login: 'alex_parker@dev.dev',
         isDeleted: false,
         age: generateAge(),
         password: generatePassword()
@@ -41,3 +41,7 @@ export const predefinedUsers: User[] = [
         password: generatePassword()
     }
 ];
+
+export const getPredefinedUsers = (): User[] => {
+    return predefinedUsers;
+};
