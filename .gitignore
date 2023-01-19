@@ -1,5 +1,6 @@
 # husky
 .husky
+.env
 
 src/configs/environments/.env
 # Compiled output

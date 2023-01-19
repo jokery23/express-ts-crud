@@ -5,7 +5,12 @@ import { AppResponseInterface } from './domain/interfaces/app-response.interface
 import { HttpStatusCode } from './domain/enums/http-status-code.enum';
 import { AppErrorInterface } from './domain/interfaces/app-error.interface';
 
-export const errorHandler = (err: Error | ValidationError | any, req: Request, res: Response, next: NextFunction): void => {
+export const errorHandler = (
+    err: Error | ValidationError | any,
+    req: Request,
+    res: Response,
+    next: NextFunction
+): void => {
     try {
         let error: string;
         const errors: AppErrorInterface[] = [];
@@ -15,6 +20,7 @@ export const errorHandler = (err: Error | ValidationError | any, req: Request, r
             error = err?.message;
             errors.push({ message: error || 'Something went wrong!' });
         } else {
+            console.log(' ----- ', err, ' --- ');
             const validationError = err.error as ValidationError;
             errors.push(...getParsedValidationErrors(validationError));
             if (errors.length) {
