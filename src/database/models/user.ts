@@ -54,5 +54,5 @@ User.init(
             allowNull: false
         }
     },
-    { sequelize: connection, tableName: 'Users' }
+    { sequelize: connection, tableName: USER_TABLE_NAME }
 );
