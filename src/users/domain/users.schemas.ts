@@ -31,7 +31,7 @@ export const updateParamsSchema = Joi.object<User>({
 async function isUniqueLogin(login: keyof User): Promise<keyof User | ErrorReport> {
     const result = await userService.findOneByField('login', login);
     if (result) {
-        throw new Error(`User with specified login already exists`);
+        throw new Error('User with specified login already exists');
     }
 
     return undefined;

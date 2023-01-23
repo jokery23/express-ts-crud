@@ -1,5 +1,3 @@
-import { UsersServiceInterface } from './domain/interfaces/users-service.interface';
-
 import { FindAllUsersDto } from './domain/dto/find-all-users.dto';
 import { Service, Inject } from 'typedi';
 import UsersService, { USERS_SERVICE_INJECT_TOKEN } from './users.service';

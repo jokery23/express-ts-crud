@@ -1,13 +1,16 @@
-export const config = {
+const dotenv = require('dotenv');
+dotenv.config();
+const env = process.env;
+
+const DIALECT = env['DB_DIALECT'] || 'postgres';
+
+module.exports = {
     development: {
-        username: 'database_dev',
-        password: 'database_dev',
-        database: 'database_dev',
-        host: '127.0.0.1',
-        port: 5432,
-        dialect: 'mysql',
-        dialectOptions: {
-            bigNumberStrings: true
-        }
+        username: env['DB_USERNAME'],
+        password: env['DB_PASSWORD'],
+        database: env['DB_NAME'],
+        host: env['DB_HOST'],
+        port: +env['DB_PORT'],
+        dialect: DIALECT
     }
 };

@@ -8,7 +8,6 @@ import { User } from '../database/models/user';
 import { FindOptions, Op } from 'sequelize';
 
 export const USERS_SERVICE_INJECT_TOKEN = new Token<UsersService>('USERS_SERVICE_INJECT_TOKEN');
-// export const USERS_SERVICE_INJECT_TOKEN = 'USERS_SERVICE_INJECT_TOKEN';
 
 @Service(USERS_SERVICE_INJECT_TOKEN)
 export default class UsersService implements UsersServiceInterface {

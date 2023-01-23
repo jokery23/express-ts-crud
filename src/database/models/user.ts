@@ -1,6 +1,8 @@
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
 import { connection } from '../index';
 
+export const USER_TABLE_NAME = 'Users';
+
 export class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
     declare id: CreationOptional<string>;
 
@@ -52,5 +54,5 @@ User.init(
             allowNull: false
         }
     },
-    { sequelize: connection }
+    { sequelize: connection, tableName: 'Users' }
 );

@@ -6,8 +6,7 @@ dotenv.config();
 import express, { Application } from 'express';
 
 import { connection } from './database';
-import routes from './routes';
-import initialize from './initialize';
+import { routes, initialize } from './loaders';
 
 const port: number = +(process.env.SERVER_PORT ?? 8080);
 const syncForce = false;
@@ -16,14 +15,14 @@ const app: Application = express();
 initialize(app);
 routes(app);
 
-bootstrap();
+bootstrap(app);
 
-async function bootstrap() {
+async function bootstrap(application: Application) {
     try {
         await connection.authenticate();
         await connection.sync({ force: syncForce });
         // start the express server
-        app.listen(port, async () => {
+        application.listen(port, async () => {
             console.log(`server started at http://localhost:${port}`);
         });
     } catch (e) {

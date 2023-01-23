@@ -17,3 +17,15 @@
 ```bash
     npx husky add .husky/pre-commit "npm run lint"
 ```
+
+### Run up all seeds
+
+```bash
+    npx sequelize-cli db:seed:all
+```
+
+### Run down for all seeds
+
+```bash
+    npx sequelize-cli db:seed:undo
+```
