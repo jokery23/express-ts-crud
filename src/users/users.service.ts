@@ -1,9 +1,9 @@
 import { Service, Token } from 'typedi';
-import { UsersServiceInterface } from './domain/interfaces/users-service.interface';
-import { CreateUserDto } from './domain/dto/create-user.dto';
-import { CreateUserResDto } from './domain/dto/create-user-res.dto';
-import { UpdateUserDto } from './domain/dto/update-user.dto';
-import { FindAllUsersDto } from './domain/dto/find-all-users.dto';
+import { UsersServiceInterface } from './types/interfaces/users-service.interface';
+import { CreateUserDto } from './types/dto/create-user.dto';
+import { CreateUserResDto } from './types/dto/create-user-res.dto';
+import { UpdateUserDto } from './types/dto/update-user.dto';
+import { FindAllUsersDto } from './types/dto/find-all-users.dto';
 import { User } from '../database/models/user';
 import { FindOptions, Op } from 'sequelize';
 

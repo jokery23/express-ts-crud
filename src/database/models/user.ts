@@ -54,5 +54,13 @@ User.init(
             allowNull: false
         }
     },
-    { sequelize: connection, tableName: USER_TABLE_NAME }
+    {
+        sequelize: connection,
+        tableName: USER_TABLE_NAME,
+        defaultScope: {
+            attributes: {
+                exclude: ['password']
+            }
+        }
+    }
 );

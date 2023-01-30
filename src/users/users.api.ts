@@ -2,10 +2,10 @@ import { Router, Request, Response, NextFunction } from 'express';
 import { Container } from 'typedi';
 
 import UsersController from './users.controller';
-import { AppResponseInterface } from '../shared/domain/interfaces/app-response.interface';
+import { AppResponseInterface } from '../shared/types/interfaces/app-response.interface';
 import { User } from '../database/models/user';
-import { createPayloadSchema, updatePayloadSchema, updateParamsSchema } from './domain/users.schemas';
-import { validator } from './domain/users.validator';
+import { createPayloadSchema, updatePayloadSchema, idParamSchema } from './types/users.schemas';
+import { validator } from './users.validator';
 
 const usersApi: Router = Router();
 const usersController = Container.get(UsersController);
@@ -43,7 +43,7 @@ usersApi.post('/', async (req: Request, res: Response, next: NextFunction) => {
 
 usersApi.put(
     '/:id',
-    validator.params(updateParamsSchema),
+    validator.params(idParamSchema),
     validator.body(updatePayloadSchema),
     async (req: Request, res: Response) => {
         const id = req.params.id;
@@ -58,7 +58,7 @@ usersApi.put(
     }
 );
 
-usersApi.get('/:id', async (req: Request, res: Response) => {
+usersApi.get('/:id', validator.params(idParamSchema), async (req: Request, res: Response) => {
     const id = req.params.id;
     const user = await usersController.findOne(+id);
 
@@ -69,7 +69,7 @@ usersApi.get('/:id', async (req: Request, res: Response) => {
     res.json(response);
 });
 
-usersApi.delete('/:id', async (req: Request, res: Response) => {
+usersApi.delete('/:id', validator.params(idParamSchema), async (req: Request, res: Response) => {
     const id = req.params.id;
     const user = await usersController.remove(+id);
 

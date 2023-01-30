@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
 import { ValidationError } from 'joi';
 
-import { AppResponseInterface } from './domain/interfaces/app-response.interface';
-import { HttpStatusCode } from './domain/enums/http-status-code.enum';
-import { AppErrorInterface } from './domain/interfaces/app-error.interface';
+import { AppResponseInterface } from './types/interfaces/app-response.interface';
+import { HttpStatusCode } from './types/enums/http-status-code.enum';
+import { AppErrorInterface } from './types/interfaces/app-error.interface';
 
 export const errorHandler = (
     err: Error | ValidationError | any,
@@ -20,7 +20,6 @@ export const errorHandler = (
             error = err?.message;
             errors.push({ message: error || 'Something went wrong!' });
         } else {
-            console.log(' ----- ', err, ' --- ');
             const validationError = err.error as ValidationError;
             errors.push(...getParsedValidationErrors(validationError));
             if (errors.length) {

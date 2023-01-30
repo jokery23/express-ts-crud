@@ -24,8 +24,8 @@ export const updatePayloadSchema = Joi.object<User>({
     isDeleted: Joi.boolean()
 });
 
-export const updateParamsSchema = Joi.object<User>({
-    id: Joi.string().required()
+export const idParamSchema = Joi.object<User>({
+    id: Joi.number().integer().required()
 });
 
 async function isUniqueLogin(login: keyof User): Promise<keyof User | ErrorReport> {
