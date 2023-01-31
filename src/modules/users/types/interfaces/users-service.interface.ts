@@ -1,5 +1,5 @@
 import { CreateUserDto } from '../dto/create-user.dto';
-import { User } from '../../../database/models/user';
+import { User } from '../../../../database/models/user';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { FindAllUsersDto } from '../dto/find-all-users.dto';
 

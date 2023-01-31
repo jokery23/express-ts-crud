@@ -1,5 +1,5 @@
 import { createValidator, ExpressJoiContainerConfig, ExpressJoiInstance } from 'express-joi-validation';
-import { HttpStatusCode } from '../shared/types/enums/http-status-code.enum';
+import { HttpStatusCode } from '../types/enums/http-status-code.enum';
 
 const validateConfig: ExpressJoiContainerConfig = {
     passError: true,

@@ -1,7 +1,7 @@
 import { FindAllUsersDto } from './types/dto/find-all-users.dto';
 import { Service, Inject } from 'typedi';
 import UsersService, { USERS_SERVICE_INJECT_TOKEN } from './users.service';
-import { User } from '../database/models/user';
+import { User } from '../../database/models/user';
 import { CreateUserDto } from './types/dto/create-user.dto';
 import { UpdateUserDto } from './types/dto/update-user.dto';
 

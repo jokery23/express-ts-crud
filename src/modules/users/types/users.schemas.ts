@@ -1,6 +1,6 @@
 import Joi, { ErrorReport } from 'joi';
 
-import { User } from '../../database/models/user';
+import { User } from '../../../database/models/user';
 import { Container } from 'typedi';
 import UsersService, { USERS_SERVICE_INJECT_TOKEN } from '../users.service';
 

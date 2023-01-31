@@ -2,10 +2,10 @@ import { Router, Request, Response, NextFunction } from 'express';
 import { Container } from 'typedi';
 
 import UsersController from './users.controller';
-import { AppResponseInterface } from '../shared/types/interfaces/app-response.interface';
-import { User } from '../database/models/user';
+import { AppResponseInterface } from '../../shared/types/interfaces/app-response.interface';
+import { User } from '../../database/models/user';
 import { createPayloadSchema, updatePayloadSchema, idParamSchema } from './types/users.schemas';
-import { validator } from './users.validator';
+import { validator } from '../../shared/validators/main.validator';
 
 const usersApi: Router = Router();
 const usersController = Container.get(UsersController);

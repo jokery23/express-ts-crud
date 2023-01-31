@@ -4,7 +4,7 @@ import { CreateUserDto } from './types/dto/create-user.dto';
 import { CreateUserResDto } from './types/dto/create-user-res.dto';
 import { UpdateUserDto } from './types/dto/update-user.dto';
 import { FindAllUsersDto } from './types/dto/find-all-users.dto';
-import { User } from '../database/models/user';
+import { User } from '../../database/models/user';
 import { FindOptions, Op } from 'sequelize';
 
 export const USERS_SERVICE_INJECT_TOKEN = new Token<UsersService>('USERS_SERVICE_INJECT_TOKEN');

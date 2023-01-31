@@ -1,6 +1,6 @@
 import { Application } from 'express';
 
-import usersApi from '../users/users.api';
+import usersApi from '../modules/users/users.api';
 import { errorHandler } from '../shared/error-handler';
 
 export default (app: Application) => {
