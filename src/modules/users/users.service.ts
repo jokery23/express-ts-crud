@@ -73,10 +73,6 @@ export default class UsersService implements UsersServiceInterface {
             await user.save();
         }
 
-        return user
+        return user;
     }
-
-
-
-
 }
