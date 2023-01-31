@@ -24,6 +24,7 @@ export default class UsersService implements UsersServiceInterface {
                 }
             };
         }
+
         return await User.findAll(findOptions);
     }
 
@@ -72,6 +73,10 @@ export default class UsersService implements UsersServiceInterface {
             await user.save();
         }
 
-        return user;
+        return user
     }
+
+
+
+
 }
