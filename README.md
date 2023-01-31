@@ -6,16 +6,10 @@
     npm install
 ```
 
-### Post install
+### Install husky
 
 ```bash
-    npm run prepare
-```
-
-### Config husky
-
-```bash
-    npx husky add .husky/pre-commit "npm run lint"
+    npm run husky:install
 ```
 
 ### Run up all seeds
