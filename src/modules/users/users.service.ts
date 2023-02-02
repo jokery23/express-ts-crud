@@ -1,7 +1,6 @@
 import { Service, Token } from 'typedi';
 import { UsersServiceInterface } from './types/interfaces/users-service.interface';
 import { CreateUserDto } from './types/dto/create-user.dto';
-import { CreateUserResDto } from './types/dto/create-user-res.dto';
 import { UpdateUserDto } from './types/dto/update-user.dto';
 import { FindAllUsersDto } from './types/dto/find-all-users.dto';
 import { User } from '../../database/models/user';
@@ -28,7 +27,7 @@ export default class UsersService implements UsersServiceInterface {
         return await User.findAll(findOptions);
     }
 
-    async create(payload: CreateUserDto): Promise<CreateUserResDto> {
+    async create(payload: CreateUserDto): Promise<User | null> {
         let user: User | null;
         try {
             user = await User.create(payload);
