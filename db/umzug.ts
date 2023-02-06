@@ -29,7 +29,7 @@ export type Migration = typeof migrator._types.migration;
 
 export const seeder = new Umzug({
     migrations: {
-        glob: ['seeders/*.ts', { cwd: __dirname }]
+        glob: ['seeders/*.seeds.ts', { cwd: __dirname }]
     },
     storage: new SequelizeStorage({ sequelize: connection }),
     context: connection,

@@ -1,4 +1,4 @@
-import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
+import { CreationOptional, DataTypes, fn, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
 import { connection } from '../index';
 
 export const USER_TABLE_NAME = 'Users';
@@ -18,8 +18,8 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
 User.init(
     {
         id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
+            type: DataTypes.UUID,
+            defaultValue: fn('uuid_generate_v4'),
             primaryKey: true
         },
         login: {

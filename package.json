@@ -12,7 +12,15 @@
     "prettier:fix": "prettier --write './src/**/*.ts'",
     "test": "echo \"Error: no test specified\" && exit 1",
     "pre-commit": "npm run prettier:fix && npm run lint:fix",
-    "husky:install": "husky install && npx husky add .husky/pre-commit \"npm run pre-commit\""
+    "husky:install": "husky install && npx husky add .husky/pre-commit \"npm run pre-commit\"",
+    "db:up": "npm run db:migrations && npm run db:seeds",
+    "db:down": "npm run db:seeds:down:all && npm run db:migrations:down:all",
+    "db:migrations": "node db/migrate up",
+    "db:migrations:down": "node db/migrate down",
+    "db:migrations:down:all": "node db/migrate down --to 0",
+    "db:seeds": "node db/seed up",
+    "db:seeds:down": "node db/seed down",
+    "db:seeds:down:all": "node db/seed down --to 0"
   },
   "keywords": [],
   "author": "",

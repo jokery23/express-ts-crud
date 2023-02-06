@@ -1,7 +1,6 @@
 import { Service, Token } from 'typedi';
 import { UsersServiceInterface } from './types/interfaces/users-service.interface';
 import { CreateUserDto } from './types/dto/create-user.dto';
-import { CreateUserResDto } from './types/dto/create-user-res.dto';
 import { UpdateUserDto } from './types/dto/update-user.dto';
 import { FindAllUsersDto } from './types/dto/find-all-users.dto';
 import { User } from '../../database/models/user';
@@ -13,6 +12,7 @@ export const USERS_SERVICE_INJECT_TOKEN = new Token<UsersService>('USERS_SERVICE
 export default class UsersService implements UsersServiceInterface {
     async findAll(params: FindAllUsersDto): Promise<User[]> {
         const findOptions: FindOptions = {
+            include: 'groups',
             limit: params.limit,
             order: [['login', 'asc']]
         };
@@ -28,7 +28,7 @@ export default class UsersService implements UsersServiceInterface {
         return await User.findAll(findOptions);
     }
 
-    async create(payload: CreateUserDto): Promise<CreateUserResDto> {
+    async create(payload: CreateUserDto): Promise<User | null> {
         let user: User | null;
         try {
             user = await User.create(payload);
@@ -69,8 +69,7 @@ export default class UsersService implements UsersServiceInterface {
         const user = await User.findByPk(id);
 
         if (user) {
-            user.isDeleted = true;
-            await user.save();
+            await user.destroy({ force: true });
         }
 
         return user;
