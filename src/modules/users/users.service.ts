@@ -12,6 +12,7 @@ export const USERS_SERVICE_INJECT_TOKEN = new Token<UsersService>('USERS_SERVICE
 export default class UsersService implements UsersServiceInterface {
     async findAll(params: FindAllUsersDto): Promise<User[]> {
         const findOptions: FindOptions = {
+            include: 'groups',
             limit: params.limit,
             order: [['login', 'asc']]
         };
@@ -68,8 +69,7 @@ export default class UsersService implements UsersServiceInterface {
         const user = await User.findByPk(id);
 
         if (user) {
-            user.isDeleted = true;
-            await user.save();
+            await user.destroy({ force: true });
         }
 
         return user;

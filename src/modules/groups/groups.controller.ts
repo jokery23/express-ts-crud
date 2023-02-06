@@ -27,4 +27,8 @@ export default class GroupsController {
     async remove(id: string): Promise<Group | null> {
         return await this.groupsService.remove(id);
     }
+
+    async addUsersToGroup(groupId: string, userIds: string[]): Promise<string[]> {
+        return await this.groupsService.addUsersToGroup(groupId, userIds);
+    }
 }

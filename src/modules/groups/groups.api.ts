@@ -3,7 +3,7 @@ import { Container } from 'typedi';
 import GroupsController from './groups.controller';
 import { AppResponseInterface } from '../../shared/types/interfaces/app-response.interface';
 import { Group } from '../../database/models/group';
-import { createPayloadSchema, updatePayloadSchema, idParamSchema } from './types/groups.schemas';
+import { createPayloadSchema, updatePayloadSchema, idParamSchema, addUsersPayloadSchema } from './types/groups.schemas';
 import { validator } from '../../shared/validators/main.validator';
 
 const groupsApi: Router = Router();
@@ -75,5 +75,27 @@ groupsApi.delete('/:id', validator.params(idParamSchema), async (req: Request, r
 
     res.json(response);
 });
+
+groupsApi.post(
+    '/:id/add-users',
+    validator.params(idParamSchema),
+    validator.body(addUsersPayloadSchema),
+    async (req: Request, res: Response, next: NextFunction) => {
+        const id = req.params.id;
+        const { userIds } = req.body;
+
+        const response: AppResponseInterface<string[]> = {
+            data: []
+        };
+
+        try {
+            response.data = await groupsController.addUsersToGroup(id, userIds);
+        } catch (e) {
+            return next(e);
+        }
+
+        res.json(response);
+    }
+);
 
 export default groupsApi;

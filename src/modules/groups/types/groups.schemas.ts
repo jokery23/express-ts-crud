@@ -7,11 +7,16 @@ import GroupsService, { GROUPS_SERVICE_INJECT_TOKEN } from '../groups.service';
 const groupService: GroupsService = Container.get(GROUPS_SERVICE_INJECT_TOKEN);
 
 const nameRule = Joi.string();
-const permissionsRule = Joi.valid(...groupPermissionValues);
+const permissionsRule = Joi.array().items(Joi.valid(...groupPermissionValues));
+const userIdsRule = Joi.array().items(Joi.string().uuid());
 
 export const createPayloadSchema = Joi.object<Group>({
     name: nameRule.required().external(async (name) => await isUniqueName(name)),
     permissions: permissionsRule.required()
+});
+
+export const addUsersPayloadSchema = Joi.object({
+    userIds: userIdsRule.required()
 });
 
 export const updatePayloadSchema = Joi.object<Group>({
@@ -26,7 +31,7 @@ export const idParamSchema = Joi.object<Group>({
 async function isUniqueName(name: keyof Group): Promise<keyof Group | ErrorReport> {
     const result = await groupService.findOneByField('name', name);
     if (result) {
-        throw new Error('Group with specified name already exists');
+        throw new Error(`Group with specified name(${name}) already exists`);
     }
 
     return undefined;

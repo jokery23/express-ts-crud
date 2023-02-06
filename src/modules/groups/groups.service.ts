@@ -3,14 +3,17 @@ import { GroupsServiceInterface } from './types/interfaces/groups-service.interf
 import { CreateGroupDto } from './types/dto/create-group.dto';
 import { UpdateGroupDto } from './types/dto/update-group.dto';
 import { Group } from '../../database/models/group';
+import { User } from '../../database/models/user';
+import { UserGroup } from '../../database/models/user-group';
 import { Op } from 'sequelize';
+import { connection } from '../../database';
 
 export const GROUPS_SERVICE_INJECT_TOKEN = new Token<GroupsService>('GROUPS_SERVICE_INJECT_TOKEN');
 
 @Service(GROUPS_SERVICE_INJECT_TOKEN)
 export default class GroupsService implements GroupsServiceInterface {
     async findAll(): Promise<Group[]> {
-        return await Group.findAll();
+        return await Group.findAll({ include: 'users' });
     }
 
     async create(payload: CreateGroupDto): Promise<Group | null> {
@@ -30,7 +33,7 @@ export default class GroupsService implements GroupsServiceInterface {
             if (group) {
                 group = await group.update(payload);
             } else {
-                throw Error(`Group with id ${id} not found`);
+                throw Error(`Group with id(${id}) not found`);
             }
         } catch (e) {
             console.error(`[Error][Update group]: ${e.message || e}`);
@@ -60,5 +63,37 @@ export default class GroupsService implements GroupsServiceInterface {
         }
 
         return group;
+    }
+
+    async addUsersToGroup(groupId: string, userIds: string[]): Promise<string[]> {
+        const transaction = await connection.transaction();
+        const group = await Group.findByPk(groupId);
+        const users = await User.findAll({
+            where: {
+                id: {
+                    [Op.in]: userIds
+                }
+            }
+        });
+
+        if (!group) {
+            throw Error(`Group with id(${groupId}) not found`);
+        }
+        if (!users || users.length === 0) {
+            throw Error(`Users with ids(${userIds}) not found`);
+        }
+
+        try {
+            for (let i = 0; i < users.length; i++) {
+                await UserGroup.create({ userId: users[i].id, groupId });
+            }
+
+            await transaction.commit();
+        } catch (e) {
+            await transaction.rollback();
+            throw Error(`[Error][Add users to group]: ${e.message || e}`);
+        }
+
+        return userIds;
     }
 }

@@ -14,4 +14,6 @@ export interface GroupsServiceInterface {
     update(id: string, payload: UpdateGroupDto): Promise<Group | null>;
 
     remove(id: string): Promise<Group | null>;
+
+    addUsersToGroup(groupId: string, userIds: string[]): Promise<string[]>;
 }
