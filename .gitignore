@@ -3,7 +3,7 @@ logs/*
 
 # husky
 .husky
-.env
+config/.env
 
 src/configs/environments/.env
 # Compiled output

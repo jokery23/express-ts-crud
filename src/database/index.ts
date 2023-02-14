@@ -11,5 +11,6 @@ export const connection = new Sequelize({
     username: env['DB_USERNAME'],
     password: env['DB_PASSWORD'],
     host: env['DB_HOST'],
-    models: ['/models/**/*.ts']
+    models: ['/models/**/*.ts'],
+    logging: Boolean(env['DB_LOGGING'])
 });
