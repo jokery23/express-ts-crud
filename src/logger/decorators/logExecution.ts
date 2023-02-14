@@ -1,7 +1,7 @@
 import logger from '../index';
 
 export default function logExecution() {
-    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+    return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
         const childFunction = descriptor.value;
         descriptor.value = async (...args: any[]) => {
             let res: any;
