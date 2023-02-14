@@ -22,10 +22,10 @@ async function bootstrap(application: Application) {
         await connection.sync();
         // start the express server
         application.listen(port, async () => {
-            console.log(`server started at http://localhost:${port}`);
+            logger.info(`server started at http://localhost:${port}`);
         });
     } catch (e) {
-        console.error(`[Database error] ${e.toString()}`);
+        logger.error(`[Database error] ${e.toString()}`);
         await connection.close();
     }
 }

@@ -7,17 +7,18 @@ import { User } from '../../database/models/user';
 import { UserGroup } from '../../database/models/user-group';
 import { Op } from 'sequelize';
 import { connection } from '../../database';
-import logTimeExecution from '../../logger/decorators/logTimeExecution';
+import logExecution from '../../logger/decorators/logExecution';
 
 export const GROUPS_SERVICE_INJECT_TOKEN = new Token<GroupsService>('GROUPS_SERVICE_INJECT_TOKEN');
 
 @Service(GROUPS_SERVICE_INJECT_TOKEN)
 export default class GroupsService implements GroupsServiceInterface {
-    @logTimeExecution()
+    @logExecution()
     async findAll(): Promise<Group[]> {
         return await Group.findAll({ include: 'users' });
     }
-    @logTimeExecution()
+
+    @logExecution()
     async create(payload: CreateGroupDto): Promise<Group | null> {
         let group: Group | null;
         try {
@@ -28,7 +29,7 @@ export default class GroupsService implements GroupsServiceInterface {
         return group;
     }
 
-    @logTimeExecution()
+    @logExecution()
     async update(id: string, payload: UpdateGroupDto): Promise<Group | null> {
         let group: Group | null;
         try {
@@ -44,7 +45,7 @@ export default class GroupsService implements GroupsServiceInterface {
         return group;
     }
 
-    @logTimeExecution()
+    @logExecution()
     async findOne(id: string): Promise<Group | null> {
         function sleep(ms: number) {
             return new Promise((resolve) => {
@@ -55,7 +56,7 @@ export default class GroupsService implements GroupsServiceInterface {
         return await Group.findByPk(id);
     }
 
-    @logTimeExecution()
+    @logExecution()
     async findOneByField(field: string, value: unknown): Promise<Group | null> {
         return await Group.findOne({
             where: {
@@ -66,7 +67,7 @@ export default class GroupsService implements GroupsServiceInterface {
         });
     }
 
-    @logTimeExecution()
+    @logExecution()
     async remove(id: string): Promise<Group | null> {
         const group = await Group.findByPk(id);
 
@@ -77,7 +78,7 @@ export default class GroupsService implements GroupsServiceInterface {
         return group;
     }
 
-    @logTimeExecution()
+    @logExecution()
     async addUsersToGroup(groupId: string, userIds: string[]): Promise<string[]> {
         const transaction = await connection.transaction();
         const group = await Group.findByPk(groupId);
