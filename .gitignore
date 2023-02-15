@@ -2,7 +2,6 @@ logs/*
 !logs/.gitkeep
 
 # husky
-.husky
 config/.env
 
 src/configs/environments/.env
