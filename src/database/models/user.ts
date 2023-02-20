@@ -11,8 +11,6 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
     declare password: string;
 
     declare age: string;
-
-    declare isDeleted: boolean;
 }
 
 User.init(
@@ -47,11 +45,6 @@ User.init(
                 min: 4,
                 max: 120
             }
-        },
-        isDeleted: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false,
-            allowNull: false
         }
     },
     {

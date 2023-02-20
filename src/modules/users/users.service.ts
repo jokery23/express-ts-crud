@@ -42,7 +42,7 @@ export default class UsersService implements UsersServiceInterface {
     }
 
     @logExecution()
-    async update(id: number, payload: UpdateUserDto): Promise<User | null> {
+    async update(id: string, payload: UpdateUserDto): Promise<User | null> {
         let user: User | null;
         try {
             user = await User.findByPk(id);
@@ -56,7 +56,7 @@ export default class UsersService implements UsersServiceInterface {
     }
 
     @logExecution()
-    async findOne(id: number): Promise<User | null> {
+    async findOne(id: string): Promise<User | null> {
         return await User.findByPk(id);
     }
 
@@ -71,7 +71,7 @@ export default class UsersService implements UsersServiceInterface {
     }
 
     @logExecution()
-    async remove(id: number): Promise<User | null> {
+    async remove(id: string): Promise<User | null> {
         const user = await User.findByPk(id);
 
         if (user) {

@@ -11,9 +11,11 @@ const permissionsRule = Joi.array().items(Joi.valid(...groupPermissionValues));
 const userIdsRule = Joi.array().items(Joi.string().uuid());
 
 export const createPayloadSchema = Joi.object<Group>({
-    name: nameRule.required().external(async (name) => await isUniqueName(name)),
+    name: nameRule.required(),
     permissions: permissionsRule.required()
 });
+
+export const uniqueNameSchema = nameRule.external(async (name) => await isUniqueName(name));
 
 export const addUsersPayloadSchema = Joi.object({
     userIds: userIdsRule.required()

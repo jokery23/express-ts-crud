@@ -1,83 +1,101 @@
 import { Router, Request, Response, NextFunction } from 'express';
+import asyncHandler from 'express-async-handler';
 import { Container } from 'typedi';
 
-import UsersController from './users.controller';
 import { AppResponseInterface } from '../../shared/types/interfaces/app-response.interface';
 import { User } from '../../database/models/user';
-import { createPayloadSchema, updatePayloadSchema, idParamSchema } from './types/users.schemas';
+import { createPayloadSchema, updatePayloadSchema, idParamSchema, uniqueLoginSchema } from './types/users.schemas';
 import { validator } from '../../shared/validators/main.validator';
+import UsersService, { USERS_SERVICE_INJECT_TOKEN } from './users.service';
+import { CreateUserDto } from './types/dto/create-user.dto';
 
 const usersApi: Router = Router();
-const usersController = Container.get(UsersController);
+const usersService = Container.get<UsersService>(USERS_SERVICE_INJECT_TOKEN);
 
-usersApi.get('/', async (req: Request, res: Response) => {
-    let { limit = 10, search = '' } = req.query;
-    limit = Number(limit);
-    search = String(search);
-    const users = await usersController.findAll({ search, limit });
+usersApi.get(
+    '/',
+    asyncHandler(async (req: Request, res: Response) => {
+        let { limit = 10, search = '' } = req.query;
+        limit = Number(limit);
+        search = String(search);
 
-    const response: AppResponseInterface<User[]> = {
-        data: users
-    };
+        const users = await usersService.findAll({ search, limit });
 
-    res.json(response);
-});
+        const response: AppResponseInterface<User[]> = {
+            data: users
+        };
 
-usersApi.post('/', async (req: Request, res: Response, next: NextFunction) => {
-    const payload = req.body;
+        res.json(response);
+    })
+);
 
-    try {
-        await createPayloadSchema.validateAsync(payload);
-    } catch (e) {
-        return next(e);
-    }
+usersApi.post(
+    '/',
+    validator.body(createPayloadSchema),
+    asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+        const payload: CreateUserDto = req.body;
 
-    const user = await usersController.createUser(payload);
+        try {
+            await uniqueLoginSchema.validateAsync(payload.login);
+        } catch (e) {
+            return next(e);
+        }
 
-    const response: AppResponseInterface<User> = {
-        data: user
-    };
-
-    res.json(response);
-});
-
-usersApi.put(
-    '/:id',
-    validator.params(idParamSchema),
-    validator.body(updatePayloadSchema),
-    async (req: Request, res: Response) => {
-        const id = req.params.id;
-        const payload = req.body;
-        const user = await usersController.updateUser(+id, payload);
+        const user = await usersService.create(payload);
 
         const response: AppResponseInterface<User> = {
             data: user
         };
 
         res.json(response);
-    }
+    })
 );
 
-usersApi.get('/:id', validator.params(idParamSchema), async (req: Request, res: Response) => {
-    const id = req.params.id;
-    const user = await usersController.findOne(+id);
+usersApi.put(
+    '/:id',
+    validator.params(idParamSchema),
+    validator.body(updatePayloadSchema),
+    asyncHandler(async (req: Request, res: Response) => {
+        const id = req.params.id;
+        const payload = req.body;
+        const user = await usersService.update(id, payload);
 
-    const response: AppResponseInterface<User> = {
-        data: user
-    };
+        const response: AppResponseInterface<User> = {
+            data: user
+        };
 
-    res.json(response);
-});
+        res.json(response);
+    })
+);
 
-usersApi.delete('/:id', validator.params(idParamSchema), async (req: Request, res: Response) => {
-    const id = req.params.id;
-    const user = await usersController.remove(+id);
+usersApi.get(
+    '/:id',
+    validator.params(idParamSchema),
+    asyncHandler(async (req: Request, res: Response) => {
+        const id = req.params.id;
+        const user = await usersService.findOne(id);
 
-    const response: AppResponseInterface<User> = {
-        data: user
-    };
+        const response: AppResponseInterface<User> = {
+            data: user
+        };
 
-    res.json(response);
-});
+        res.json(response);
+    })
+);
+
+usersApi.delete(
+    '/:id',
+    validator.params(idParamSchema),
+    asyncHandler(async (req: Request, res: Response) => {
+        const id = req.params.id;
+        const user = await usersService.remove(id);
+
+        const response: AppResponseInterface<User> = {
+            data: user
+        };
+
+        res.json(response);
+    })
+);
 
 export default usersApi;
