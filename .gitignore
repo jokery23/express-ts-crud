@@ -1,6 +1,8 @@
+logs/*
+!logs/.gitkeep
+
 # husky
-.husky
-.env
+config/.env
 
 src/configs/environments/.env
 # Compiled output

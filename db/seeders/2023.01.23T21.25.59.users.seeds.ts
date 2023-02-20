@@ -12,7 +12,6 @@ export const up: Seeder = async ({ context }) => {
         login,
         password: generatePassword(),
         age: generateAge(),
-        isDeleted: false,
         createdAt: new Date(),
         updatedAt: new Date()
     }));

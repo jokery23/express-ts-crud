@@ -6,13 +6,13 @@ import { FindAllUsersDto } from '../dto/find-all-users.dto';
 export interface UsersServiceInterface {
     findAll(params: FindAllUsersDto): Promise<User[]>;
 
-    findOne(id: number): Promise<User | null>;
+    findOne(id: string): Promise<User | null>;
 
     findOneByField(field: string, value: unknown): Promise<User | null>;
 
     create(payload: CreateUserDto): Promise<User | null>;
 
-    update(id: number, payload: UpdateUserDto): Promise<User | null>;
+    update(id: string, payload: UpdateUserDto): Promise<User | null>;
 
-    remove(id: number): Promise<User | null>;
+    remove(id: string): Promise<User | null>;
 }

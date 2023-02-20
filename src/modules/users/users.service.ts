@@ -5,11 +5,13 @@ import { UpdateUserDto } from './types/dto/update-user.dto';
 import { FindAllUsersDto } from './types/dto/find-all-users.dto';
 import { User } from '../../database/models/user';
 import { FindOptions, Op } from 'sequelize';
+import logExecution from '../../logger/decorators/logExecution';
 
 export const USERS_SERVICE_INJECT_TOKEN = new Token<UsersService>('USERS_SERVICE_INJECT_TOKEN');
 
 @Service(USERS_SERVICE_INJECT_TOKEN)
 export default class UsersService implements UsersServiceInterface {
+    @logExecution()
     async findAll(params: FindAllUsersDto): Promise<User[]> {
         const findOptions: FindOptions = {
             include: 'groups',
@@ -28,6 +30,7 @@ export default class UsersService implements UsersServiceInterface {
         return await User.findAll(findOptions);
     }
 
+    @logExecution()
     async create(payload: CreateUserDto): Promise<User | null> {
         let user: User | null;
         try {
@@ -38,7 +41,8 @@ export default class UsersService implements UsersServiceInterface {
         return user;
     }
 
-    async update(id: number, payload: UpdateUserDto): Promise<User | null> {
+    @logExecution()
+    async update(id: string, payload: UpdateUserDto): Promise<User | null> {
         let user: User | null;
         try {
             user = await User.findByPk(id);
@@ -51,7 +55,8 @@ export default class UsersService implements UsersServiceInterface {
         return user;
     }
 
-    async findOne(id: number): Promise<User | null> {
+    @logExecution()
+    async findOne(id: string): Promise<User | null> {
         return await User.findByPk(id);
     }
 
@@ -65,7 +70,8 @@ export default class UsersService implements UsersServiceInterface {
         });
     }
 
-    async remove(id: number): Promise<User | null> {
+    @logExecution()
+    async remove(id: string): Promise<User | null> {
         const user = await User.findByPk(id);
 
         if (user) {

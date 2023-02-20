@@ -12,13 +12,12 @@ export const errorHandler = (
     next: NextFunction
 ): void => {
     try {
-        let error: string;
         const errors: AppErrorInterface[] = [];
         let statusCode = res.statusCode || HttpStatusCode.InternalServerError;
 
         if (err instanceof Error) {
-            error = err?.message;
-            errors.push({ message: error || 'Something went wrong!' });
+            errors.push({ message: err.message || 'Internal Server Error' });
+            statusCode = HttpStatusCode.InternalServerError;
         } else {
             const validationError = err.error as ValidationError;
             errors.push(...getParsedValidationErrors(validationError));

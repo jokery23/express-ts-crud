@@ -11,21 +11,21 @@ const passwordRule = Joi.string().alphanum();
 const ageRule = Joi.number().integer().min(4).max(120);
 
 export const createPayloadSchema = Joi.object<User>({
-    login: loginRule.required().external(async (login) => await isUniqueLogin(login)),
+    login: loginRule.required(),
     password: passwordRule.required(),
-    age: ageRule.required(),
-    isDeleted: Joi.boolean().required()
+    age: ageRule.required()
 });
+
+export const uniqueLoginSchema = loginRule.required().external(async (login) => await isUniqueLogin(login));
 
 export const updatePayloadSchema = Joi.object<User>({
     login: loginRule,
     password: passwordRule,
-    age: ageRule,
-    isDeleted: Joi.boolean()
+    age: ageRule
 });
 
 export const idParamSchema = Joi.object<User>({
-    id: Joi.number().integer().required()
+    id: Joi.string().uuid().required()
 });
 
 async function isUniqueLogin(login: keyof User): Promise<keyof User | ErrorReport> {

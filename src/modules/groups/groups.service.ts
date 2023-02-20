@@ -7,15 +7,18 @@ import { User } from '../../database/models/user';
 import { UserGroup } from '../../database/models/user-group';
 import { Op } from 'sequelize';
 import { connection } from '../../database';
+import logExecution from '../../logger/decorators/logExecution';
 
 export const GROUPS_SERVICE_INJECT_TOKEN = new Token<GroupsService>('GROUPS_SERVICE_INJECT_TOKEN');
 
 @Service(GROUPS_SERVICE_INJECT_TOKEN)
 export default class GroupsService implements GroupsServiceInterface {
+    @logExecution()
     async findAll(): Promise<Group[]> {
         return await Group.findAll({ include: 'users' });
     }
 
+    @logExecution()
     async create(payload: CreateGroupDto): Promise<Group | null> {
         let group: Group | null;
         try {
@@ -26,6 +29,7 @@ export default class GroupsService implements GroupsServiceInterface {
         return group;
     }
 
+    @logExecution()
     async update(id: string, payload: UpdateGroupDto): Promise<Group | null> {
         let group: Group | null;
         try {
@@ -41,10 +45,18 @@ export default class GroupsService implements GroupsServiceInterface {
         return group;
     }
 
+    @logExecution()
     async findOne(id: string): Promise<Group | null> {
+        function sleep(ms: number) {
+            return new Promise((resolve) => {
+                setTimeout(resolve, ms);
+            });
+        }
+        await sleep(200);
         return await Group.findByPk(id);
     }
 
+    @logExecution()
     async findOneByField(field: string, value: unknown): Promise<Group | null> {
         return await Group.findOne({
             where: {
@@ -55,6 +67,7 @@ export default class GroupsService implements GroupsServiceInterface {
         });
     }
 
+    @logExecution()
     async remove(id: string): Promise<Group | null> {
         const group = await Group.findByPk(id);
 
@@ -65,6 +78,7 @@ export default class GroupsService implements GroupsServiceInterface {
         return group;
     }
 
+    @logExecution()
     async addUsersToGroup(groupId: string, userIds: string[]): Promise<string[]> {
         const transaction = await connection.transaction();
         const group = await Group.findByPk(groupId);
