@@ -1,5 +1,5 @@
 const dotenv = require('dotenv');
-dotenv.config();
+dotenv.config({ path: './../config/.env' });
 const env = process.env;
 
 const DIALECT = env['DB_DIALECT'] || 'postgres';

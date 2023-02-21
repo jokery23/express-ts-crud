@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 import { env } from 'node:process';
 import { Sequelize, Dialect } from 'sequelize';
 
-dotenv.config();
+dotenv.config({ path: './config/.env' });
 
 const DIALECT: Dialect = (env['DB_DIALECT'] as Dialect) || 'postgres';
 
