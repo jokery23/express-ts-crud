@@ -4,6 +4,7 @@ import { ValidationError } from 'joi';
 import { AppResponseInterface } from './types/interfaces/app-response.interface';
 import { HttpStatusCode } from './types/enums/http-status-code.enum';
 import { AppErrorInterface } from './types/interfaces/app-error.interface';
+import logger from '../logger';
 
 export const errorHandler = (
     err: Error | ValidationError | any,
@@ -18,6 +19,7 @@ export const errorHandler = (
         if (err instanceof Error) {
             errors.push({ message: err.message || 'Internal Server Error' });
             statusCode = HttpStatusCode.InternalServerError;
+            logger.error(`[Middleware Error Handler] ${errors[0].message}`);
         } else {
             const validationError = err.error as ValidationError;
             errors.push(...getParsedValidationErrors(validationError));

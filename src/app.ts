@@ -7,7 +7,6 @@ import { connection } from './database';
 import logger from './logger';
 import { routes, initialize, afterRoutes } from './loaders';
 import express, { Application } from 'express';
-import { isUncaughtExceptionEnabled } from './config/logger';
 
 const port: number = Number(process.env.SERVER_PORT ?? 8080);
 const app: Application = express();
@@ -34,9 +33,7 @@ async function bootstrap(application: Application) {
     }
 }
 
-if (isUncaughtExceptionEnabled) {
-    process.on('uncaughtException', (error) => {
-        logger.error('[UncaughtException]: ', error);
-        process.exit(1);
-    });
-}
+process.on('uncaughtException', (error) => {
+    logger.error('[UncaughtException Error Handler]: ', error);
+    process.exit(1);
+});
