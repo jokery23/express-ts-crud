@@ -8,6 +8,7 @@ import { createPayloadSchema, updatePayloadSchema, idParamSchema, uniqueLoginSch
 import { validator } from '../../shared/validators/main.validator';
 import UsersService, { USERS_SERVICE_INJECT_TOKEN } from './users.service';
 import { CreateUserDto } from './types/dto/create-user.dto';
+import { NotFound } from 'http-errors';
 
 const usersApi: Router = Router();
 const usersService = Container.get<UsersService>(USERS_SERVICE_INJECT_TOKEN);
@@ -75,6 +76,10 @@ usersApi.get(
         const id = req.params.id;
         const user = await usersService.findOne(id);
 
+        if (!user) {
+            throw new NotFound();
+        }
+
         const response: AppResponseInterface<User> = {
             data: user
         };
@@ -89,6 +94,10 @@ usersApi.delete(
     asyncHandler(async (req: Request, res: Response) => {
         const id = req.params.id;
         const user = await usersService.remove(id);
+
+        if (!user) {
+            throw new NotFound();
+        }
 
         const response: AppResponseInterface<User> = {
             data: user

@@ -26,7 +26,7 @@ authApi.post(
                 throw new BadRequest('Invalid email or password.');
             }
 
-            token = await authService.createToken({ username, password });
+            token = await authService.createToken({ id: user.id, login: user.login });
         } catch (err) {
             return next(err);
         }
