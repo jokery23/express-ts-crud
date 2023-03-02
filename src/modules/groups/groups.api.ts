@@ -14,6 +14,7 @@ import {
 import { validator } from '../../shared/validators/main.validator';
 import GroupsService, { GROUPS_SERVICE_INJECT_TOKEN } from './groups.service';
 import { CreateGroupDto } from './types/dto/create-group.dto';
+import { NotFound } from 'http-errors';
 
 const groupsApi: Router = Router();
 const groupsService = Container.get<GroupsService>(GROUPS_SERVICE_INJECT_TOKEN);
@@ -77,6 +78,10 @@ groupsApi.get(
         const id = req.params.id;
         const group = await groupsService.findOne(id);
 
+        if (!group) {
+            throw new NotFound();
+        }
+
         const response: AppResponseInterface<Group> = {
             data: group
         };
@@ -91,6 +96,10 @@ groupsApi.delete(
     asyncHandler(async (req: Request, res: Response) => {
         const id = req.params.id;
         const group = await groupsService.remove(id);
+
+        if (!group) {
+            throw new NotFound();
+        }
 
         const response: AppResponseInterface<Group> = {
             data: group
