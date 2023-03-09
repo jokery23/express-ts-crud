@@ -4,8 +4,14 @@ import usersApi from '../modules/users/users.api';
 import groupsApi from '../modules/groups/groups.api';
 import authApi from '../modules/auth/auth.api';
 
+export enum ROUTES {
+    USERS = '/users',
+    GROUPS = '/groups',
+    AUTH = '/auth'
+}
+
 export default function routes(app: Application) {
-    app.use('/v2/users', usersApi);
-    app.use('/v2/groups', groupsApi);
-    app.use('/v2/auth', authApi);
+    app.use(ROUTES.USERS, usersApi);
+    app.use(ROUTES.GROUPS, groupsApi);
+    app.use(ROUTES.AUTH, authApi);
 }
