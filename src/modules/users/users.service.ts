@@ -2,17 +2,18 @@ import { Service, Token } from 'typedi';
 import { UsersServiceInterface } from './types/interfaces/users-service.interface';
 import { CreateUserDto } from './types/dto/create-user.dto';
 import { UpdateUserDto } from './types/dto/update-user.dto';
-import { FindAllUsersDto } from './types/dto/find-all-users.dto';
+import { FindAllUsersParamsDto } from './types/dto/find-all-users-params.dto';
 import { User } from '../../database/models/user';
 import { FindOptions, Op } from 'sequelize';
 import logExecution from '../../logger/decorators/logExecution';
+import { GetUserDto } from './types/dto/get-user.dto';
 
 export const USERS_SERVICE_INJECT_TOKEN = new Token<UsersService>('USERS_SERVICE_INJECT_TOKEN');
 
 @Service(USERS_SERVICE_INJECT_TOKEN)
 export default class UsersService implements UsersServiceInterface {
     @logExecution()
-    async findAll(params: FindAllUsersDto): Promise<User[]> {
+    async findAll(params: FindAllUsersParamsDto): Promise<GetUserDto[]> {
         const findOptions: FindOptions = {
             include: 'groups',
             limit: params.limit,
@@ -31,7 +32,7 @@ export default class UsersService implements UsersServiceInterface {
     }
 
     @logExecution()
-    async create(payload: CreateUserDto): Promise<User | null> {
+    async create(payload: CreateUserDto): Promise<GetUserDto | null> {
         let user: User | null;
         try {
             user = await User.create(payload);
@@ -42,7 +43,7 @@ export default class UsersService implements UsersServiceInterface {
     }
 
     @logExecution()
-    async update(id: string, payload: UpdateUserDto): Promise<User | null> {
+    async update(id: string, payload: UpdateUserDto): Promise<GetUserDto | null> {
         let user: User | null;
         try {
             user = await User.findByPk(id);
@@ -56,11 +57,11 @@ export default class UsersService implements UsersServiceInterface {
     }
 
     @logExecution()
-    async findOne(id: string): Promise<User | null> {
+    async findOne(id: string): Promise<GetUserDto | null> {
         return await User.findByPk(id);
     }
 
-    async findOneByField(field: string, value: unknown): Promise<User | null> {
+    async findOneByField(field: string, value: unknown): Promise<GetUserDto | null> {
         return await User.findOne({
             where: {
                 [field]: {
@@ -71,7 +72,7 @@ export default class UsersService implements UsersServiceInterface {
     }
 
     @logExecution()
-    async remove(id: string): Promise<User | null> {
+    async remove(id: string): Promise<GetUserDto | null> {
         const user = await User.findByPk(id);
 
         if (user) {
