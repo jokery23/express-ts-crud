@@ -245,7 +245,7 @@ function getDefinedGroups(): Partial<Group>[] {
 }
 
 function throwNotFound(): never {
-    throw NotFound(`Group not found`);
+    throw NotFound('Group not found');
 }
 
 function throwInternalServerError(): never {
