@@ -1,4 +1,4 @@
-export type FindAllUsersDto = {
+export type FindAllUsersParamsDto = {
     limit?: number;
     search?: string;
 };

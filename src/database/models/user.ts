@@ -10,7 +10,7 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
 
     declare password: string;
 
-    declare age: string;
+    declare age: number;
 }
 
 User.init(

@@ -3,12 +3,13 @@ import asyncHandler from 'express-async-handler';
 import { Container } from 'typedi';
 
 import { AppResponseInterface } from '../../shared/types/interfaces/app-response.interface';
-import { User } from '../../database/models/user';
 import { createPayloadSchema, updatePayloadSchema, idParamSchema, uniqueLoginSchema } from './types/users.schemas';
 import { validator } from '../../shared/validators/main.validator';
 import UsersService, { USERS_SERVICE_INJECT_TOKEN } from './users.service';
 import { CreateUserDto } from './types/dto/create-user.dto';
 import { NotFound } from 'http-errors';
+import { GetUserDto } from './types/dto/get-user.dto';
+import { StatusCodes } from 'http-status-codes';
 
 const usersApi: Router = Router();
 const usersService = Container.get<UsersService>(USERS_SERVICE_INJECT_TOKEN);
@@ -22,7 +23,7 @@ usersApi.get(
 
         const users = await usersService.findAll({ search, limit });
 
-        const response: AppResponseInterface<User[]> = {
+        const response: AppResponseInterface<GetUserDto[]> = {
             data: users
         };
 
@@ -44,11 +45,11 @@ usersApi.post(
 
         const user = await usersService.create(payload);
 
-        const response: AppResponseInterface<User> = {
+        const response: AppResponseInterface<GetUserDto> = {
             data: user
         };
 
-        res.json(response);
+        res.status(StatusCodes.CREATED).json(response);
     })
 );
 
@@ -61,7 +62,7 @@ usersApi.put(
         const payload = req.body;
         const user = await usersService.update(id, payload);
 
-        const response: AppResponseInterface<User> = {
+        const response: AppResponseInterface<GetUserDto> = {
             data: user
         };
 
@@ -80,7 +81,7 @@ usersApi.get(
             throw new NotFound();
         }
 
-        const response: AppResponseInterface<User> = {
+        const response: AppResponseInterface<GetUserDto> = {
             data: user
         };
 
@@ -99,11 +100,7 @@ usersApi.delete(
             throw new NotFound();
         }
 
-        const response: AppResponseInterface<User> = {
-            data: user
-        };
-
-        res.json(response);
+        res.status(StatusCodes.NO_CONTENT).json();
     })
 );
 

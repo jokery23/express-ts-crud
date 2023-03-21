@@ -15,6 +15,7 @@ import { validator } from '../../shared/validators/main.validator';
 import GroupsService, { GROUPS_SERVICE_INJECT_TOKEN } from './groups.service';
 import { CreateGroupDto } from './types/dto/create-group.dto';
 import { NotFound } from 'http-errors';
+import { StatusCodes } from 'http-status-codes';
 
 const groupsApi: Router = Router();
 const groupsService = Container.get<GroupsService>(GROUPS_SERVICE_INJECT_TOKEN);
@@ -50,7 +51,7 @@ groupsApi.post(
             data: user
         };
 
-        res.json(response);
+        res.status(StatusCodes.CREATED).json(response);
     })
 );
 
@@ -101,11 +102,7 @@ groupsApi.delete(
             throw new NotFound();
         }
 
-        const response: AppResponseInterface<Group> = {
-            data: group
-        };
-
-        res.json(response);
+        res.status(StatusCodes.NO_CONTENT).json();
     })
 );
 

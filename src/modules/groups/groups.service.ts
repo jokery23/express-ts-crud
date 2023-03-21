@@ -8,6 +8,7 @@ import { UserGroup } from '../../database/models/user-group';
 import { Op } from 'sequelize';
 import { connection } from '../../database';
 import logExecution from '../../logger/decorators/logExecution';
+import { InternalServerError, NotFound } from 'http-errors';
 
 export const GROUPS_SERVICE_INJECT_TOKEN = new Token<GroupsService>('GROUPS_SERVICE_INJECT_TOKEN');
 
@@ -37,7 +38,7 @@ export default class GroupsService implements GroupsServiceInterface {
             if (group) {
                 group = await group.update(payload);
             } else {
-                throw Error(`Group with id(${id}) not found`);
+                throw NotFound(`Group with id(${id}) not found`);
             }
         } catch (e) {
             console.error(`[Error][Update group]: ${e.message || e}`);
@@ -91,10 +92,10 @@ export default class GroupsService implements GroupsServiceInterface {
         });
 
         if (!group) {
-            throw Error(`Group with id(${groupId}) not found`);
+            throw NotFound(`Group with id(${groupId}) not found`);
         }
         if (!users || users.length === 0) {
-            throw Error(`Users with ids(${userIds}) not found`);
+            throw NotFound(`Users with ids(${userIds}) not found`);
         }
 
         try {
@@ -105,7 +106,7 @@ export default class GroupsService implements GroupsServiceInterface {
             await transaction.commit();
         } catch (e) {
             await transaction.rollback();
-            throw Error(`[Error][Add users to group]: ${e.message || e}`);
+            throw InternalServerError(`[Error][Add users to group]: ${e.message || e}`);
         }
 
         return userIds;
