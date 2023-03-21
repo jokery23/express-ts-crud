@@ -17,7 +17,7 @@ const BASE_URL = ROUTES.USERS;
 describe('Test users module', () => {
     let usersService: UsersService;
 
-    beforeAll(async () => {
+    beforeEach(async () => {
         usersService = Container.get<UsersService>(USERS_SERVICE_INJECT_TOKEN);
     });
 
