@@ -14,7 +14,7 @@ const chance = new Chance();
 const definedUsers = getDefinedUsers();
 const BASE_URL = ROUTES.USERS;
 
-describe('Test users module', () => {
+describe('Test users api', () => {
     let usersService: UsersService;
 
     beforeEach(async () => {
@@ -63,17 +63,17 @@ describe('Test users module', () => {
         });
     });
 
-    describe('creating user', () => {
+    describe('create user', () => {
         let user: GetUserDto;
         let payload: Partial<CreateUserDto>;
 
         beforeAll(() => {
             user = chance.pickone(definedUsers);
-            usersService.create = jest.fn().mockReturnValue(user);
         });
 
         beforeEach(() => {
             payload = {};
+            usersService.create = jest.fn().mockReturnValue(user);
         });
 
         test('should create user, errors are empty, correct status code is 201', async () => {
@@ -83,15 +83,17 @@ describe('Test users module', () => {
                 age: 23
             };
 
+            const createdUser = { id: uuidv4(), ...payload };
+
             // resolve email is unique
             usersService.findOneByField = jest.fn().mockReturnValue(null);
-            usersService.create = jest.fn().mockReturnValue(payload);
+            usersService.create = jest.fn().mockReturnValue(createdUser);
 
             const response = await request(app).post(`${BASE_URL}`).send(payload);
 
             const errors: AppErrorInterface[] = response.body.errors;
 
-            expect(response.body.data).toEqual(payload);
+            expect(response.body.data).toEqual(createdUser);
             expect(errors).toBeFalsy();
             expect(response.statusCode).toEqual(StatusCodes.CREATED);
         });
@@ -126,7 +128,7 @@ describe('Test users module', () => {
         });
     });
 
-    describe('updating user', () => {
+    describe('update user', () => {
         test('should return updated user, status is OK', async () => {
             const user: GetUserDto = chance.pickone(definedUsers);
             const { id = null, ...payload }: Partial<GetUserDto> = user;
@@ -138,21 +140,29 @@ describe('Test users module', () => {
             expect(response.statusCode).toEqual(StatusCodes.OK);
         });
 
-        test('should return error about not allowed field, status 400', async () => {
+        test('should return error about not allowed fields, status 400', async () => {
             const user: Partial<GetUserDto> = chance.pickone(definedUsers);
+            const { id = null, ...payload }: Partial<GetUserDto> = user;
             usersService.update = jest.fn().mockReturnValue(user);
 
-            const response = await request(app).put(`${BASE_URL}/${user.id}`).send(user);
+            const response = await request(app)
+                .put(`${BASE_URL}/${id}`)
+                .send({
+                    wrongField: 'wrongValue',
+                    wrongField2: 'wrongValue2',
+                    ...payload
+                });
 
             const errors: AppErrorInterface[] = response.body.errors;
-            const hasWrongId = errors.some(({ field }) => field === 'id');
+            const expectedErrorsKeys = ['wrongField', 'wrongField2'];
+            const actualErrorsKeys = errors.map((error: AppErrorInterface) => error.field);
 
-            expect(hasWrongId).toEqual(true);
+            expect(expectedErrorsKeys).toEqual(actualErrorsKeys);
             expect(response.statusCode).toEqual(StatusCodes.BAD_REQUEST);
         });
     });
 
-    describe('deleting user', () => {
+    describe('delete user', () => {
         test('should return 204 status, user was deleted', async () => {
             const user: GetUserDto = chance.pickone(definedUsers);
             usersService.remove = jest.fn().mockReturnValue(user);
