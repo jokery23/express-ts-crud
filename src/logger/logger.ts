@@ -1,8 +1,8 @@
 import { createLogger, format, transports } from 'winston';
-import { env } from 'node:process';
+import { isTest } from '../shared/config.helper';
 
 export const logger = createLogger({
-    silent: env.NODE_ENV === 'test',
+    silent: isTest(),
     transports: [
         new transports.Console({
             level: 'info',

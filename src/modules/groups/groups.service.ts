@@ -9,6 +9,7 @@ import { Op } from 'sequelize';
 import { connection } from '../../database';
 import logExecution from '../../logger/decorators/logExecution';
 import { InternalServerError, NotFound } from 'http-errors';
+import logger from '../../logger';
 
 export const GROUPS_SERVICE_INJECT_TOKEN = new Token<GroupsService>('GROUPS_SERVICE_INJECT_TOKEN');
 
@@ -25,7 +26,7 @@ export default class GroupsService implements GroupsServiceInterface {
         try {
             group = await Group.create(payload);
         } catch (e) {
-            console.error(`[Error][Create group]: ${e}`);
+            logger.error(`[Error][Create group]: ${e}`);
         }
         return group;
     }
@@ -41,7 +42,7 @@ export default class GroupsService implements GroupsServiceInterface {
                 throw NotFound(`Group with id(${id}) not found`);
             }
         } catch (e) {
-            console.error(`[Error][Update group]: ${e.message || e}`);
+            logger.error(`[Error][Update group]: ${e.message || e}`);
         }
         return group;
     }

@@ -1,8 +1,14 @@
 import logger from '../index';
+import { isLogExecutionDecoratorEnabled } from '../../shared/config.helper';
 
 export default function logExecution() {
     return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
+        if (!isLogExecutionDecoratorEnabled()) {
+            return descriptor;
+        }
+
         const childFunction = descriptor.value;
+
         descriptor.value = async (...args: any[]) => {
             let res: any;
             const start = Date.now();
