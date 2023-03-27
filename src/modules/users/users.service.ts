@@ -7,6 +7,7 @@ import { User } from '../../database/models/user';
 import { FindOptions, Op } from 'sequelize';
 import logExecution from '../../logger/decorators/logExecution';
 import { GetUserDto } from './types/dto/get-user.dto';
+import logger from '../../logger';
 
 export const USERS_SERVICE_INJECT_TOKEN = new Token<UsersService>('USERS_SERVICE_INJECT_TOKEN');
 
@@ -37,7 +38,7 @@ export default class UsersService implements UsersServiceInterface {
         try {
             user = await User.create(payload);
         } catch (e) {
-            console.error(`[Error][Create user]: ${e}`);
+            logger.error(`[Error][Create user]: ${e}`);
         }
         return user;
     }
@@ -51,7 +52,7 @@ export default class UsersService implements UsersServiceInterface {
                 user = await user.update(payload);
             }
         } catch (e) {
-            console.error(`[Error][Update user]: ${e.message || e}`);
+            logger.error(`[Error][Update user]: ${e.message || e}`);
         }
         return user;
     }

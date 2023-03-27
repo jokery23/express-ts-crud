@@ -1,5 +1,4 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import asyncHandler from 'express-async-handler';
 import { Container } from 'typedi';
 import UsersService, { USERS_SERVICE_INJECT_TOKEN } from '../users/users.service';
 import { BadRequest } from 'http-errors';
@@ -15,7 +14,7 @@ const authService = Container.get<AuthService>(AUTH_SERVICE_INJECT_TOKEN);
 authApi.post(
     '/token',
     validator.body(createTokenPayloadSchema),
-    asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    async (req: Request, res: Response, next: NextFunction) => {
         const { username, password } = req.body;
         let token: string | null = null;
 
@@ -36,7 +35,7 @@ authApi.post(
         };
 
         res.json(response);
-    })
+    }
 );
 
 export default authApi;

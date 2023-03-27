@@ -13,3 +13,5 @@ export const isSkipAuth = (): boolean => process.env.SKIP_AUTH && isTest();
 export const getJWTSecret = (): string => process.env.JWT_TOKEN_SECRET ?? '';
 
 export const getPort = (): number => Number(process.env.SERVER_PORT ?? 8080);
+
+export const isLogExecutionDecoratorEnabled = (): boolean => Boolean(process.env.LOG_EXECUTION_DECORATOR_ENABLED);

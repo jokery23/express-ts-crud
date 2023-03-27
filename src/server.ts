@@ -17,7 +17,6 @@ bootstrap(app);
 async function bootstrap(application: Application) {
     try {
         await connection.authenticate();
-        await connection.sync();
 
         application.listen(port, async () => {
             logger.info(`server started at http://localhost:${port}`);
@@ -29,6 +28,6 @@ async function bootstrap(application: Application) {
 }
 
 process.on('uncaughtException', (error) => {
-    logger.error('[UncaughtException Error Handler]: ', error);
+    logger.error(`[UncaughtException Error Handler]: ${error}`);
     process.exit(1);
 });

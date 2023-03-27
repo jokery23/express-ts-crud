@@ -1,3 +1,4 @@
+import 'express-async-errors';
 import { routes, initialize, afterRoutes } from './loaders';
 import express, { Application } from 'express';
 
