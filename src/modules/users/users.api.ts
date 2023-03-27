@@ -1,5 +1,4 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import asyncHandler from 'express-async-handler';
 import { Container } from 'typedi';
 
 import { AppResponseInterface } from '../../shared/types/interfaces/app-response.interface';
@@ -14,50 +13,43 @@ import { StatusCodes } from 'http-status-codes';
 const usersApi: Router = Router();
 const usersService = Container.get<UsersService>(USERS_SERVICE_INJECT_TOKEN);
 
-usersApi.get(
-    '/',
-    asyncHandler(async (req: Request, res: Response) => {
-        let { limit = 10, search = '' } = req.query;
-        limit = Number(limit);
-        search = String(search);
+usersApi.get('/', async (req: Request, res: Response) => {
+    let { limit = 10, search = '' } = req.query;
+    limit = Number(limit);
+    search = String(search);
 
-        const users = await usersService.findAll({ search, limit });
+    const users = await usersService.findAll({ search, limit });
 
-        const response: AppResponseInterface<GetUserDto[]> = {
-            data: users
-        };
+    const response: AppResponseInterface<GetUserDto[]> = {
+        data: users
+    };
 
-        res.json(response);
-    })
-);
+    res.json(response);
+});
 
-usersApi.post(
-    '/',
-    validator.body(createPayloadSchema),
-    asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-        const payload: CreateUserDto = req.body;
+usersApi.post('/', validator.body(createPayloadSchema), async (req: Request, res: Response, next: NextFunction) => {
+    const payload: CreateUserDto = req.body;
 
-        try {
-            await uniqueLoginSchema.validateAsync(payload.login);
-        } catch (e) {
-            return next(e);
-        }
+    try {
+        await uniqueLoginSchema.validateAsync(payload.login);
+    } catch (e) {
+        return next(e);
+    }
 
-        const user = await usersService.create(payload);
+    const user = await usersService.create(payload);
 
-        const response: AppResponseInterface<GetUserDto> = {
-            data: user
-        };
+    const response: AppResponseInterface<GetUserDto> = {
+        data: user
+    };
 
-        res.status(StatusCodes.CREATED).json(response);
-    })
-);
+    res.status(StatusCodes.CREATED).json(response);
+});
 
 usersApi.put(
     '/:id',
     validator.params(idParamSchema),
     validator.body(updatePayloadSchema),
-    asyncHandler(async (req: Request, res: Response) => {
+    async (req: Request, res: Response) => {
         const id = req.params.id;
         const payload = req.body;
         const user = await usersService.update(id, payload);
@@ -67,41 +59,33 @@ usersApi.put(
         };
 
         res.json(response);
-    })
+    }
 );
 
-usersApi.get(
-    '/:id',
-    validator.params(idParamSchema),
-    asyncHandler(async (req: Request, res: Response) => {
-        const id = req.params.id;
-        const user = await usersService.findOne(id);
+usersApi.get('/:id', validator.params(idParamSchema), async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const user = await usersService.findOne(id);
 
-        if (!user) {
-            throw new NotFound();
-        }
+    if (!user) {
+        throw new NotFound();
+    }
 
-        const response: AppResponseInterface<GetUserDto> = {
-            data: user
-        };
+    const response: AppResponseInterface<GetUserDto> = {
+        data: user
+    };
 
-        res.json(response);
-    })
-);
+    res.json(response);
+});
 
-usersApi.delete(
-    '/:id',
-    validator.params(idParamSchema),
-    asyncHandler(async (req: Request, res: Response) => {
-        const id = req.params.id;
-        const user = await usersService.remove(id);
+usersApi.delete('/:id', validator.params(idParamSchema), async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const user = await usersService.remove(id);
 
-        if (!user) {
-            throw new NotFound();
-        }
+    if (!user) {
+        throw new NotFound();
+    }
 
-        res.status(StatusCodes.NO_CONTENT).json();
-    })
-);
+    res.status(StatusCodes.NO_CONTENT).json();
+});
 
 export default usersApi;
